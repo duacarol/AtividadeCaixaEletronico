@@ -17,24 +17,57 @@ switch (escolhaUsuario)
         Console.WriteLine("SAQUE");
         Console.Write("Digite o valor: ");
         int valorSaque = int.Parse(Console.ReadLine());
-        if (saldo >= valorSaque)
+        if (saldo < valorSaque)
+        {
+            Console.WriteLine("Saldo insuficiente!");
+        }
+        else if (valorSaque < 0)
+        {
+            Console.WriteLine("O valor não pode ser menor do que 0.");
+        }
+        else
         {
             saldo -= valorSaque;
             Console.WriteLine($"Você sacou {valorSaque:C}.");
             Console.WriteLine($"Saldo atual: {saldo:C}.");
-        }
-        else
-        {
-            Console.WriteLine("Saldo insuficiente!");
         }
         break;
     case "2":
         Console.WriteLine("DEPÓSITO");
         Console.Write("Digite o valor: ");
         int valorDeposito = int.Parse(Console.ReadLine());
-        saldo += valorDeposito;
-        Console.WriteLine($"Você depositou {valorDeposito:C}.");
-        Console.WriteLine($"Saldo atual: {saldo:C}.");
+        if (valorDeposito < 0)
+        {
+            Console.WriteLine("O valor não pode ser menor do que 0.");
+        }
+        else
+        {
+            saldo += valorDeposito;
+            Console.WriteLine($"Você depositou {valorDeposito:C}.");
+            Console.WriteLine($"Saldo atual: {saldo:C}.");
+        }
+        break;
+    case "3":
+        Console.WriteLine("TRANSFERÊNCIA");
+        Console.Write("Digite o número da conta do(a) favorecido(a): ");
+        int contaFavorecido = int.Parse(Console.ReadLine()); // 8 dígitos
+
+        Console.Write("Digite o nome do(a) favorecido(a): ");
+        string nomeFavorecido = Console.ReadLine();
+
+        Console.Write("Digite o valor: ");
+        int valorTransferencia = int.Parse(Console.ReadLine());
+
+        if (valorTransferencia < 0)
+        {
+            Console.WriteLine("O valor não pode ser menor do que 0.");
+        }
+        else
+        {
+            saldo -= valorTransferencia;
+            Console.WriteLine($"Você transferiu {valorTransferencia:C} para {contaFavorecido} | {nomeFavorecido}.");
+            Console.WriteLine($"Saldo atual: {saldo:C}.");
+        }
         break;
     default:
         Console.WriteLine("Opção inválida. Tente novamente.");
