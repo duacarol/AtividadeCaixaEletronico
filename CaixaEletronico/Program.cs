@@ -1,4 +1,5 @@
-﻿int saldo = 1000;
+﻿List<string> extrato = new List<string>();
+int saldo = 1000;
 
 inicio:
 Console.WriteLine("CAIXA ELETRÔNICO");
@@ -28,10 +29,12 @@ switch (escolhaUsuario)
         else
         {
             saldo -= valorSaque;
+            extrato.Add($"Saque de {valorSaque:C} — Saldo restante: {saldo:C}");
             Console.WriteLine($"Você sacou {valorSaque:C}.");
             Console.WriteLine($"Saldo atual: {saldo:C}.");
         }
         break;
+
     case "2":
         Console.WriteLine("DEPÓSITO");
         Console.Write("Digite o valor: ");
@@ -43,10 +46,12 @@ switch (escolhaUsuario)
         else
         {
             saldo += valorDeposito;
+            extrato.Add($"Depósito de {valorDeposito:C} — Saldo restante: {saldo:C}");
             Console.WriteLine($"Você depositou {valorDeposito:C}.");
             Console.WriteLine($"Saldo atual: {saldo:C}.");
         }
         break;
+
     case "3":
         Console.WriteLine("TRANSFERÊNCIA");
         Console.Write("Digite o número da conta do(a) favorecido(a): ");
@@ -65,10 +70,29 @@ switch (escolhaUsuario)
         else
         {
             saldo -= valorTransferencia;
-            Console.WriteLine($"Você transferiu {valorTransferencia:C} para {contaFavorecido} | {nomeFavorecido}.");
-            Console.WriteLine($"Saldo atual: {saldo:C}.");
+            extrato.Add($"Transferência de {valorTransferencia:C} para {nomeFavorecido} ({contaFavorecido}) — Saldo restante: {saldo:C}");
+            Console.WriteLine($"Você transferiu {valorTransferencia:C} para {nomeFavorecido} ({contaFavorecido}).");
+            Console.WriteLine($"Saldo atual: {saldo:C}");
         }
         break;
+
+    case "4":
+        Console.WriteLine("SALDO E EXTRATO");
+        Console.WriteLine($"Saldo disponível: {saldo:C}");
+
+        if (extrato.Count != 0)
+        {
+            foreach (var transacao in extrato)
+            {
+                Console.WriteLine(transacao);
+            }
+        }
+        else
+        {
+            Console.WriteLine("Nenhuma transação realizada.");
+        }
+        break;
+
     default:
         Console.WriteLine("Opção inválida. Tente novamente.");
         goto escolha;
