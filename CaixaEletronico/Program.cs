@@ -1,5 +1,4 @@
-﻿
-class CaixaEletronico
+﻿class CaixaEletronico
 {
     private static decimal saldo = 1000;
     private static List<string> extrato = new List<string>();
@@ -111,15 +110,33 @@ class CaixaEletronico
     {
         EscreverTitulo("Transferência");
 
-        Console.Write("Digite os 8 números da conta do(a) favorecido(a): ");
-        if (!int.TryParse(Console.ReadLine(), out int contaFavorecido) || contaFavorecido.ToString().Length != 8)
+        Console.Write("Digite os 9 números da conta do(a) favorecido(a): ");
+        string contaFavorecido = Console.ReadLine();
+        if (!int.TryParse(contaFavorecido, out _) || contaFavorecido.Length != 9)
         {
-            ColorirLinha("Número inválido. Operação cancelada.", ConsoleColor.Red);
+            ColorirLinha("Número de conta inválido. Operação cancelada.", ConsoleColor.Red);
             return;
+        }
+        else
+        {
+            contaFavorecido = $"{contaFavorecido.Substring(0, 8)}-{contaFavorecido.Substring(8, 1)}";
         }
 
         Console.Write("Digite o nome do(a) favorecido(a): ");
-        string nomeFavorecido = Console.ReadLine();
+        string nomeFavorecido = Console.ReadLine().ToUpper();
+        if (string.IsNullOrEmpty(nomeFavorecido))
+        {
+            ColorirLinha("Nome inválido. Operação cancelada.", ConsoleColor.Red);
+            return;
+        }
+        foreach (char c in nomeFavorecido)
+        {
+            if (!char.IsLetter(c) && !char.IsWhiteSpace(c))
+            {
+                ColorirLinha("Nome inválido. Operação cancelada.", ConsoleColor.Red);
+                return;
+            }
+        }
 
         Console.Write("Digite o valor: ");
         if (!decimal.TryParse(Console.ReadLine(), out decimal valorTransferencia) || valorTransferencia <= 0)
@@ -159,7 +176,7 @@ class CaixaEletronico
     static void Sair()
     {
         EscreverNomeBanco();
-        Console.WriteLine("Obrigado por utilizar os serviços Carolbank.");
+        Console.WriteLine("Obrigada por utilizar os serviços Carolbank.");
     }
 
     static void EscreverNomeBanco()
