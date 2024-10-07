@@ -1,7 +1,14 @@
-﻿class CaixaEletronico
+﻿using System;
+using System.Collections.Generic;
+
+class CaixaEletronico
 {
     private static decimal saldo = 1000;
     private static List<string> extrato = new List<string>();
+    private static decimal saquesHoje = 0;
+    private static decimal depositosHoje = 0;
+    private static decimal transferenciasHoje = 0;
+
     static void Main()
     {
         while (true)
@@ -68,6 +75,13 @@
     static void FazerSaque()
     {
         EscreverTitulo("Saque");
+        const decimal limiteSaque = 2000;
+
+        if (saquesHoje >= limiteSaque)
+        {
+            ColorirLinha("Limite de saque diário atingido (R$ 2.000). Operação cancelada.", ConsoleColor.Red);
+            return;
+        }
 
         Console.Write("Digite o valor: ");
         if (!decimal.TryParse(Console.ReadLine(), out decimal valorSaque) || valorSaque <= 0)
@@ -80,17 +94,31 @@
             ColorirLinha("Saldo insuficiente. Operação cancelada.", ConsoleColor.Red);
             return;
         }
+        else if (saquesHoje + valorSaque > limiteSaque)
+        {
+            ColorirLinha("Valor ultrapassa o limite de saque diário (R$ 2.000). Operação cancelada.", ConsoleColor.Red);
+            return;
+        }
         else
         {
             saldo -= valorSaque;
+            saquesHoje += valorSaque;
             extrato.Add($"{DateTime.Now}: Saque de {valorSaque:C} — Saldo restante: {saldo:C}");
             Console.WriteLine($"\nVocê sacou {valorSaque:C}.");
             Console.WriteLine($"Saldo atual: {saldo:C}.");
         }
     }
+
     static void FazerDeposito()
     {
         EscreverTitulo("Depósito");
+        const decimal limiteDeposito = 10000;
+
+        if (depositosHoje >= limiteDeposito)
+        {
+            ColorirLinha("Limite de depósito diário atingido (R$ 10.000). Operação cancelada.", ConsoleColor.Red);
+            return;
+        }
 
         Console.Write("Digite o valor: ");
         if (!decimal.TryParse(Console.ReadLine(), out decimal valorDeposito) || valorDeposito <= 0)
@@ -98,17 +126,31 @@
             ColorirLinha("Valor inválido. Operação cancelada.", ConsoleColor.Red);
             return;
         }
+        else if (depositosHoje + valorDeposito > limiteDeposito)
+        {
+            ColorirLinha("Valor ultrapassa o limite de depósito diário (R$ 10.000). Operação cancelada.", ConsoleColor.Red);
+            return;
+        }
         else
         {
             saldo += valorDeposito;
+            depositosHoje += valorDeposito;
             extrato.Add($"{DateTime.Now}: Depósito de {valorDeposito:C} — Saldo restante: {saldo:C}");
             Console.WriteLine($"\nVocê depositou {valorDeposito:C}.");
             Console.WriteLine($"Saldo atual: {saldo:C}.");
         }
     }
+
     static void FazerTransferencia()
     {
         EscreverTitulo("Transferência");
+        const decimal limiteTransferencia = 2000;
+
+        if (transferenciasHoje >= limiteTransferencia)
+        {
+            ColorirLinha("Limite de transferência diário atingido (R$ 2.000). Operação cancelada.", ConsoleColor.Red);
+            return;
+        }
 
         Console.Write("Digite os 9 números da conta do(a) favorecido(a): ");
         string contaFavorecido = Console.ReadLine();
@@ -149,14 +191,21 @@
             ColorirLinha("Saldo insuficiente. Operação cancelada.", ConsoleColor.Red);
             return;
         }
+        else if (transferenciasHoje + valorTransferencia > limiteTransferencia)
+        {
+            ColorirLinha("Valor ultrapassa o limite de transferência diário (R$ 2.000). Operação cancelada.", ConsoleColor.Red);
+            return;
+        }
         else
         {
             saldo -= valorTransferencia;
+            transferenciasHoje += valorTransferencia;
             extrato.Add($"{DateTime.Now}: Transferência de {valorTransferencia:C} para {nomeFavorecido} ({contaFavorecido}) — Saldo restante: {saldo:C}");
             Console.WriteLine($"\nVocê transferiu {valorTransferencia:C} para {nomeFavorecido} ({contaFavorecido}).");
             Console.WriteLine($"Saldo atual: {saldo:C}");
         }
     }
+
     static void GerarExtrato()
     {
         EscreverTitulo("Saldo e Extrato");
@@ -173,6 +222,7 @@
             Console.WriteLine("Nenhuma transação realizada.");
         }
     }
+
     static void Sair()
     {
         EscreverNomeBanco();
@@ -187,6 +237,7 @@
         Console.WriteLine(@" / __|__ _ _ _ ___| | |__  __ _ _ _ | |__");
         Console.WriteLine(@"| (__/ _` | '_/ _ \ | '_ \/ _` | ' \| / /");
         Console.WriteLine(@" \___\__,_|_| \___/_|_.__/\__,_|_||_|_\_\");
+
         Console.WriteLine();
         Console.ResetColor();
     }
